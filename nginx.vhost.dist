@@ -1,0 +1,29 @@
+server {
+	listen 80 default_server;
+	server_name localhost;
+
+	root /home/sascha/repos/bla/web;
+
+	location / {
+		try_files $uri @route;
+	}
+
+	location ~ \.php {
+		return 404;
+	}
+
+	location /ws/ {
+		proxy_pass http://localhost:8080;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "upgrade";
+		proxy_read_timeout 10m;
+		proxy_send_timeout 10m;
+	}
+
+	location @route {
+		fastcgi_pass  unix:/var/run/php5-fpm.sock;
+		fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+		include       fastcgi_params;
+	}
+}
