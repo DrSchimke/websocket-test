@@ -7,8 +7,8 @@ use Ratchet\ConnectionInterface;
 class Chat implements MessageComponentInterface
 {
     public function onOpen(ConnectionInterface $conn) {
-        $conn->send('HELLO');
-        var_dump(__METHOD__, $conn);
+//        $conn->send('HELLO');
+        var_dump(__METHOD__);
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
