@@ -1,8 +1,8 @@
 server {
-	listen 80 default_server;
-	server_name localhost;
+	listen 80;
+	server_name sci;
 
-	root /home/sascha/repos/bla/web;
+	root /data/websocket-test/web;
 
 	location / {
 		try_files $uri @route;
@@ -23,7 +23,7 @@ server {
 
 	location @route {
 		fastcgi_pass  unix:/var/run/php5-fpm.sock;
-		fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+		fastcgi_param SCRIPT_FILENAME $document_root/silex.php;
 		include       fastcgi_params;
 	}
 }
