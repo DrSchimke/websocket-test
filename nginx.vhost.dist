@@ -1,8 +1,8 @@
 server {
 	listen 80;
-	server_name sci;
+	server_name acer.local;
 
-	root /data/websocket-test/web;
+	root /home/sascha/repos/bla/web;
 
 	location / {
 		try_files $uri @route;
