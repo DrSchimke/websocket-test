@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="http://jeromeetienne.github.io/jquery-qrcode/src/jquery.qrcode.js"></script>
+        <script src="http://jeromeetienne.github.io/jquery-qrcode/src/qrcode.js"></script>
+        <script>
+            $(function() {
+                var wsUri = "ws://acer.local/ws/";
+                var websocket = new WebSocket(wsUri);
+                
+//                jQuery('#qrcodeCanvas').qrcode({
+//                    text: location.href
+//                });	
+
+                $('body').on('mousemove', handleMousemove);
+                $('body').on('touchmove', handleTouchmove);
+                $(websocket).on('message', handleMessage);
+                
+                function handleMousemove(ev) {
+                    var oev = ev.originalEvent;
+                    moveCursor(oev.pageX, oev.pageY);
+                }
+                
+                function handleTouchmove(ev) {
+                    var oev = ev.originalEvent;
+                    var touch = oev.touches[0];
+                    
+                    var msg = {x: touch.pageX, y: touch.pageY};
+                    
+                    moveCursor(touch.pageX, touch.pageY);
+                    
+                    websocket.send(JSON.stringify(msg));
+                    oev.preventDefault();
+                }
+                
+                function handleMessage(ev) {
+                    var json = ev.originalEvent.data;
+                    var position = JSON.parse(json);
+                    
+                    moveCursor(position.x, position.y);
+                }
+                
+                function moveCursor(x, y) {
+                    $('#cursor').css({left: x, top: y });
+                }
+                
+            });
+        </script>
+        <style>
+            
+            body {
+                background-color: lightgray;
+                width:100%;
+                height: 500px;
+            }
+            #cursor {
+                background-color: black;
+                width: 10px;
+                height: 50px;
+                position: absolute;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="foo"></div>
+        <div id="cursor"></div>
+        <!--<div id="qrcodeCanvas"></div>-->
+    </body>
+</html>
